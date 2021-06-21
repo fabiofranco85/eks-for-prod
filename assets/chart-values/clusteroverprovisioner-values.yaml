@@ -1,0 +1,20 @@
+deployments:
+  - name: spot
+    replicaCount: 2
+    nodeSelector:
+      lifecycle: Ec2Spot
+      intent: apps
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "1"
+      limits:
+        memory: "512Mi"
+        cpu: "1"
+    labels:
+      app: overprovisioner
+    tolerations:
+      - key: "spotInstance"
+        operator: "Equal"
+        value: "true"
+        effect: "PreferNoSchedule"
