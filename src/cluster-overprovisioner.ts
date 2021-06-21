@@ -1,7 +1,8 @@
 import {Construct} from '@aws-cdk/core';
 import {ICluster} from '@aws-cdk/aws-eks';
 import {readFileSync} from 'fs';
-import YAML from 'yaml';
+import {loadAll} from 'js-yaml';
+import {Paths} from './paths';
 
 export interface ClusterOverprovisionerProps {
   cluster: ICluster
@@ -12,8 +13,8 @@ export class ClusterOverprovisioner extends Construct {
   constructor(scope: Construct, id: string, props: ClusterOverprovisionerProps) {
     super(scope, id);
 
-    const valuesYaml = readFileSync('./lib/eks-cluster/chart-values/clusteroverprovisioner-values.yaml', {encoding: 'utf-8'});
-    const valuesJson = YAML.parse(valuesYaml);
+    const valuesYaml = readFileSync(require('path').resolve(__dirname, `${Paths.CHARTS_VALUES}/clusteroverprovisioner-values.yaml`), {encoding: 'utf-8'});
+    const valuesJson = loadAll(valuesYaml);
 
     props.cluster.addHelmChart('ClusterOverprovisionerHelmChart', {
       release: 'cluster-overprovisioner',
