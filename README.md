@@ -22,6 +22,8 @@ The [Kubernetes](https://kubernetes.io/) cluster itself comes with the following
 
 ### Kubernetes Cluster Details
 
+Current Kubernetes version is `1.20`
+
 #### Network
 
 Currently the default VPC setting is used.
@@ -37,3 +39,10 @@ The cluster comes with its default capacity for the control plane components and
 ##### Applications
 
 There are 2 managed node groups of [SPOT](https://aws.amazon.com/ec2/spot/) instances meant for applications. The groups are a combination selected from the families `m5`, m5d`, m5a`, m4`, t3`, t3a`, t2` of sizes `xlarge` and `2xlarge`. The current minimum size is 1 and maximum of 5 instances with desired size of 1 instance.
+
+🛑 **IMPORTANT** 🛑 These nodes are [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) with `NoSchedule` effect and key `spotIntance`. Which means in order for pods to be deployed into those nodes they must tolerate this taint.
+
+The applications nodes also have two additional labels:
+
+* `lifecycle: 'Ec2Spot'`
+* `intent: 'apps'`
